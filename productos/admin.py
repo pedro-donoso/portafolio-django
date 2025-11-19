@@ -1,20 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Producto, Categoria
+from .models import Producto
 
-@admin.register(Categoria)
-class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'descripcion', 'cantidad_productos']
-    search_fields = ['nombre']
 
-    def cantidad_productos(self, obj):
-        return obj.productos.count()
-    cantidad_productos.short_description = 'Cant. Productos'
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'categoria', 'precio', 'stock', 'activo', 'usuario_creador', 'fecha_creacion']
+    list_display = ['nombre', 'precio', 'stock', 'activo', 'usuario_creador', 'fecha_creacion']
     list_filter = ['activo', 'categoria', 'fecha_creacion']
     search_fields = ['nombre', 'descripcion']
     list_editable = ['precio', 'stock', 'activo']
@@ -23,7 +16,7 @@ class ProductoAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Información Básica', {
-            'fields': ('nombre', 'descripcion', 'categoria')
+            'fields': ('nombre', 'descripcion')
         }),
         ('Precios e Inventario', {
             'fields': ('precio', 'stock')
