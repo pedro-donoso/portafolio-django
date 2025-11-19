@@ -35,13 +35,6 @@
             <div class="card-body">
                 <h5 class="card-title">{{ producto.nombre }}</h5>
                 <p class="card-text text-muted small">{{ producto.descripcion|truncatewords:15 }}</p>
-                <p class="card-text">
-                    {% if producto.categoria %}
-                    <span class="badge bg-info">{{ producto.categoria.nombre }}</span>
-                    {% else %}
-                    <span class="badge bg-secondary">Sin categoría</span>
-                    {% endif %}
-                </p>
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="text-success mb-0">${{ producto.precio }}</h4>
                     <small class="text-muted">Stock: {{ producto.stock }}</small>
