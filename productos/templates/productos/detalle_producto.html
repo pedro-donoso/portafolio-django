@@ -1,0 +1,71 @@
+{% extends 'productos/base.html' %}
+
+{% block title %}{{ producto.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" class="img-fluid rounded shadow" alt="{{ producto.nombre }}">
+        {% else %}
+        <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow"
+            style="height: 400px;">
+            <span class="display-1">📦</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1 class="mb-3">{{ producto.nombre }}</h1>
+        <p class="lead">{{ producto.descripcion }}</p>
+
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">
+                <strong>💰 Precio:</strong>
+                <span class="text-success fs-3">${{ producto.precio }}</span>
+            </li>
+            <li class="list-group-item">
+                <strong>📦 Stock disponible:</strong> {{ producto.stock }} unidades
+            </li>
+            <li class="list-group-item">
+                <strong>📁 Categoría:</strong>
+                {% if producto.categoria %}
+                <span class="badge bg-info">{{ producto.categoria.nombre }}</span>
+                {% else %}
+                <span class="badge bg-secondary">Sin categoría</span>
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                <strong>📊 Estado:</strong>
+                {% if producto.activo %}
+                <span class="badge bg-success">✓ Activo</span>
+                {% else %}
+                <span class="badge bg-secondary">✗ Inactivo</span>
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                <strong>📅 Creado:</strong> {{ producto.fecha_creacion|date:"d/m/Y H:i" }}
+            </li>
+            {% if producto.usuario_creador %}
+            <li class="list-group-item">
+                <strong>👤 Creado por:</strong>
+                {{ producto.usuario_creador.get_full_name|default:producto.usuario_creador.username }}
+            </li>
+            {% endif %}
+        </ul>
+
+        <div class="d-flex gap-2">
+            {% if user == producto.usuario_creador or user.is_superuser %}
+            <a href="{% url 'editar_producto' producto.pk %}" class="btn btn-warning">
+                ✏️ Editar
+            </a>
+            <a href="{% url 'eliminar_producto' producto.pk %}" class="btn btn-danger">
+                🗑️ Eliminar
+            </a>
+            {% endif %}
+            <a href="{% url 'lista_productos' %}" class="btn btn-secondary">
+                ← Volver
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
