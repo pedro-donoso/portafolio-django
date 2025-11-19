@@ -16,7 +16,7 @@
                 <select name="categoria" class="form-select">
                     <option value="">📁 Todas las categorías</option>
                     {% for cat in categorias %}
-                    <option value="{{ cat.id }}" {% if categoria_seleccionada==cat.id|stringformat:"s" %}selected{%
+                    <option value="{{ cat.id }}" {% if categoria_seleccionada==cat.id|stringformat:'s' %}selected{%
                         endif %}>
                         {{ cat.nombre }}
                     </option>
