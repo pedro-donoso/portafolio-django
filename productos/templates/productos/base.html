@@ -32,44 +32,91 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'lista_productos' %}">🛒 Mi Tienda</a>
+            <a class="navbar-brand fw-bold" href="{% url 'lista_productos' %}">
+                🛒 Mi Tienda
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- INICIO - Siempre visible -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'lista_productos' %}">Productos</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}"
+                            href="{% url 'lista_productos' %}">
+                            🏠 Inicio
+                        </a>
                     </li>
+
                     {% if user.is_authenticated %}
+                    <!-- AGREGAR PRODUCTO - Solo usuarios autenticados -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'agregar_producto' %}">➕ Agregar</a>
+                        <a class="nav-link {% if request.path == '/productos/agregar/' %}active{% endif %}"
+                            href="{% url 'agregar_producto' %}">
+                            ➕ Agregar Producto
+                        </a>
                     </li>
+
+                    <!-- DASHBOARD - Solo con permiso especial -->
                     {% if perms.productos.puede_ver_estadisticas %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">📊 Dashboard</a>
+                        <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}"
+                            href="{% url 'dashboard' %}">
+                            📊 Dashboard
+                        </a>
                     </li>
                     {% endif %}
+
+                    <!-- MENÚ USUARIO AUTENTICADO -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             👤 {{ user.username }}
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li>
+                                <span class="dropdown-item-text">
+                                    <small class="text-muted">
+                                        {{ user.get_full_name|default:user.username }}
+                                    </small>
+                                </span>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Panel Admin - Solo para staff -->
                             {% if user.is_staff %}
-                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">⚙️ Admin</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank">
+                                    ⚙️ Panel Admin
+                                </a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             {% endif %}
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">🚪 Salir</a></li>
+
+                            <!-- Cerrar Sesión -->
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    🚪 Cerrar Sesión
+                                </a>
+                            </li>
                         </ul>
                     </li>
+
                     {% else %}
+                    <!-- MENÚ USUARIO NO AUTENTICADO -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">🔑 Ingresar</a>
+                        <a class="nav-link" href="{% url 'login' %}">
+                            🔑 Iniciar Sesión
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-success text-white ms-2" href="{% url 'registro' %}">Registrarse</a>
+                        <a class="nav-link btn btn-success text-white ms-2 px-3" href="{% url 'registro' %}">
+                            ✨ Registrarse
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
@@ -94,6 +141,16 @@
     <footer class="mt-5 py-4 bg-light">
         <div class="container text-center">
             <p class="text-muted mb-0">&copy; 2025 Sistema de Gestión de Productos - Django</p>
+            {% if user.is_authenticated %}
+            <small class="text-muted">
+                Conectado como: <strong>{{ user.username }}</strong>
+                {% if user.is_superuser %}
+                <span class="badge bg-danger">Superusuario</span>
+                {% elif user.is_staff %}
+                <span class="badge bg-warning">Staff</span>
+                {% endif %}
+            </small>
+            {% endif %}
         </div>
     </footer>
 
