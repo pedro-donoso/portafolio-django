@@ -8,20 +8,9 @@
         <h1 class="mb-3">🛍️ Catálogo de Productos</h1>
 
         <form method="get" class="row g-3">
-            <div class="col-md-5">
+            <div class="col-md-10">
                 <input type="text" name="q" class="form-control" placeholder="🔍 Buscar productos..."
                     value="{{ query }}">
-            </div>
-            <div class="col-md-5">
-                <select name="categoria" class="form-select">
-                    <option value="">📁 Todas las categorías</option>
-                    {% for cat in categorias %}
-                    <option value="{{ cat.id }}" {% if categoria_seleccionada==cat.id|stringformat:'s' %}selected{%
-                        endif %}>
-                        {{ cat.nombre }}
-                    </option>
-                    {% endfor %}
-                </select>
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Buscar</button>
@@ -47,7 +36,11 @@
                 <h5 class="card-title">{{ producto.nombre }}</h5>
                 <p class="card-text text-muted small">{{ producto.descripcion|truncatewords:15 }}</p>
                 <p class="card-text">
+                    {% if producto.categoria %}
                     <span class="badge bg-info">{{ producto.categoria.nombre }}</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Sin categoría</span>
+                    {% endif %}
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="text-success mb-0">${{ producto.precio }}</h4>

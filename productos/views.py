@@ -11,6 +11,12 @@ def lista_productos(request):
     query = request.GET.get('q', '')
     categoria_id = request.GET.get('categoria', '')
 
+    # Convertir categoria_id a entero si existe
+    try:
+        categoria_seleccionada = int(categoria_id) if categoria_id else None
+    except ValueError:
+        categoria_seleccionada = None
+
     productos = Producto.objects.filter(activo=True).select_related('categoria', 'usuario_creador')
 
     if query:
@@ -19,18 +25,12 @@ def lista_productos(request):
             Q(descripcion__icontains=query)
         )
 
-    if categoria_id:
-        productos = productos.filter(categoria_id=categoria_id)
-
-    categorias = Categoria.objects.all()
-
     context = {
         'productos': productos,
-        'categorias': categorias,
         'query': query,
-        'categoria_seleccionada': categoria_id
     }
     return render(request, 'productos/lista_productos.html', context)
+
 
 @login_required
 def detalle_producto(request, pk):

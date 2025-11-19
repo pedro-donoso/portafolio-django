@@ -28,7 +28,11 @@
             </li>
             <li class="list-group-item">
                 <strong>📁 Categoría:</strong>
+                {% if producto.categoria %}
                 <span class="badge bg-info">{{ producto.categoria.nombre }}</span>
+                {% else %}
+                <span class="badge bg-secondary">Sin categoría</span>
+                {% endif %}
             </li>
             <li class="list-group-item">
                 <strong>📊 Estado:</strong>

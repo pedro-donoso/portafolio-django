@@ -22,7 +22,9 @@ class Producto(models.Model):
         Categoria,
         on_delete=models.CASCADE,
         related_name='productos',
-        verbose_name="Categoría"
+        verbose_name="Categoría",
+        null=True,
+        blank=True
     )
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
     usuario_creador = models.ForeignKey(
