@@ -1,25 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout as auth_logout
 from django.contrib import messages
-from django.db.models import Q, Count, Sum
-from .models import Producto, Categoria
+from django.db.models import Q, Sum
+from .models import Producto
 from .forms import ProductoForm, RegistroUsuarioForm
-from django.contrib.auth import logout as auth_logout
 
 
 def lista_productos(request):
-    """Vista pública - Lista todos los productos activos con búsqueda y filtros"""
+    """Vista pública - Lista todos los productos activos con búsqueda"""
     query = request.GET.get('q', '')
-    categoria_id = request.GET.get('categoria', '')
 
-    # Convertir categoria_id a entero si existe
-    try:
-        categoria_seleccionada = int(categoria_id) if categoria_id else None
-    except ValueError:
-        categoria_seleccionada = None
-
-    productos = Producto.objects.filter(activo=True).select_related('categoria', 'usuario_creador')
+    # ELIMINADO: código de categoria_id y categoria_seleccionada
+    # CAMBIADO: select_related sin 'categoria'
+    productos = Producto.objects.filter(activo=True).select_related('usuario_creador')
 
     if query:
         productos = productos.filter(
@@ -40,6 +34,7 @@ def detalle_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     return render(request, 'productos/detalle_producto.html', {'producto': producto})
 
+
 @login_required
 def agregar_producto(request):
     """Vista protegida - Formulario para agregar producto"""
@@ -58,6 +53,7 @@ def agregar_producto(request):
         'form': form,
         'titulo': 'Agregar Producto'
     })
+
 
 @login_required
 def editar_producto(request, pk):
@@ -83,6 +79,7 @@ def editar_producto(request, pk):
         'producto': producto
     })
 
+
 @login_required
 def eliminar_producto(request, pk):
     """Vista protegida - Eliminar producto con confirmación"""
@@ -100,6 +97,7 @@ def eliminar_producto(request, pk):
 
     return render(request, 'productos/confirmar_eliminar.html', {'producto': producto})
 
+
 @login_required
 @permission_required('productos.puede_ver_estadisticas', raise_exception=True)
 def dashboard(request):
@@ -108,17 +106,15 @@ def dashboard(request):
     productos_activos = Producto.objects.filter(activo=True).count()
     valor_inventario = Producto.objects.aggregate(total=Sum('precio'))['total'] or 0
 
-    productos_por_categoria = Categoria.objects.annotate(
-        cantidad=Count('productos')
-    ).order_by('-cantidad')
+    # ELIMINADO: productos_por_categoria (usaba Categoria que ya no existe)
 
     context = {
         'total_productos': total_productos,
         'productos_activos': productos_activos,
         'valor_inventario': valor_inventario,
-        'productos_por_categoria': productos_por_categoria,
     }
     return render(request, 'productos/dashboard.html', context)
+
 
 def registro(request):
     """Vista pública - Registro de nuevos usuarios"""
@@ -139,7 +135,13 @@ def registro(request):
 
 
 def logout_view(request):
-    """Vista personalizada de logout con mensaje"""
+    """Vista personalizada de logout con mensaje y redirección"""
+    username = request.user.username if request.user.is_authenticated else None
     auth_logout(request)
-    messages.info(request, '👋 Has cerrado sesión exitosamente.')
+
+    if username:
+        messages.success(request, f'👋 ¡Hasta pronto {username}! Has cerrado sesión exitosamente.')
+    else:
+        messages.info(request, 'Has cerrado sesión.')
+
     return redirect('login')

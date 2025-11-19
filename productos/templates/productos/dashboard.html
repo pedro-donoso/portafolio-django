@@ -31,34 +31,4 @@
         </div>
     </div>
 </div>
-
-<div class="card shadow">
-    <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">📁 Productos por Categoría</h4>
-    </div>
-    <div class="card-body">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Categoría</th>
-                    <th class="text-center">Cantidad de Productos</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for categoria in productos_por_categoria %}
-                <tr>
-                    <td>{{ categoria.nombre }}</td>
-                    <td class="text-center">
-                        <span class="badge bg-primary fs-6">{{ categoria.cantidad }}</span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="2" class="text-center text-muted">No hay datos disponibles</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
 {% endblock %}

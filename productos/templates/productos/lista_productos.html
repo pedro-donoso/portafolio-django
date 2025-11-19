@@ -23,8 +23,8 @@
     {% for producto in productos %}
     <div class="col-md-4 mb-4">
         <div class="card product-card">
-            {% if producto.imagen %}
-            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}"
+            {% if producto.get_imagen %}
+            <img src="{{ producto.get_imagen }}" class="card-img-top" alt="{{ producto.nombre }}"
                 style="height: 200px; object-fit: cover;">
             {% else %}
             <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white"

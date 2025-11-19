@@ -5,8 +5,9 @@
 {% block content %}
 <div class="row">
     <div class="col-md-6">
-        {% if producto.imagen %}
-        <img src="{{ producto.imagen.url }}" class="img-fluid rounded shadow" alt="{{ producto.nombre }}">
+        {% if producto.get_imagen %}
+        <img src="{{ producto.get_imagen }}" class="img-fluid rounded shadow" alt="{{ producto.nombre }}"
+            style="max-height: 500px; object-fit: contain;">
         {% else %}
         <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow"
             style="height: 400px;">
@@ -25,14 +26,6 @@
             </li>
             <li class="list-group-item">
                 <strong>📦 Stock disponible:</strong> {{ producto.stock }} unidades
-            </li>
-            <li class="list-group-item">
-                <strong>📁 Categoría:</strong>
-                {% if producto.categoria %}
-                <span class="badge bg-info">{{ producto.categoria.nombre }}</span>
-                {% else %}
-                <span class="badge bg-secondary">Sin categoría</span>
-                {% endif %}
             </li>
             <li class="list-group-item">
                 <strong>📊 Estado:</strong>
