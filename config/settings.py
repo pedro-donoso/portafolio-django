@@ -113,7 +113,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = 'lista_productos'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'lista_productos'
+LOGOUT_REDIRECT_URL = 'login'
 
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {

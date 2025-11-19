@@ -4,7 +4,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.db.models import Q, Count, Sum
 from .models import Producto, Categoria
-from .forms import ProductoForm, CategoriaForm, RegistroUsuarioForm
+from .forms import ProductoForm, RegistroUsuarioForm
+from django.contrib.auth import logout as auth_logout
+
 
 def lista_productos(request):
     """Vista pública - Lista todos los productos activos con búsqueda y filtros"""
@@ -134,3 +136,10 @@ def registro(request):
         form = RegistroUsuarioForm()
 
     return render(request, 'registration/registro.html', {'form': form})
+
+
+def logout_view(request):
+    """Vista personalizada de logout con mensaje"""
+    auth_logout(request)
+    messages.info(request, '👋 Has cerrado sesión exitosamente.')
+    return redirect('login')
